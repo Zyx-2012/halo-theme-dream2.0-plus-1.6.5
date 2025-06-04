@@ -1,0 +1,148 @@
+<th:block xmlns:th="https://www.thymeleaf.org">
+  <style th:inline="css"
+    th:with="fontSrc = ${theme.config.basic_style.web_font != 'default' ? theme.config.basic_style.custom_font : ''},
+    fontFormat = ${fontSrc.endsWith('.ttf') ? 'truetype' : fontSrc.endsWith('.eot') ? 'embedded-opentype' : fontSrc.replaceAll('^.*\.([\w]+)$', '$1')}">
+    [(${#strings.isEmpty(fontSrc) ? '' : '
+    @font-face {
+        font-family: "Dream Font";
+        font-display: swap;
+        font-weight: 400;
+        src: url("' + fontSrc + '")' + (#strings.isEmpty(fontFormat)? '' : ' format("' + fontFormat + '")') + ';
+    }'})]
+
+    html {
+      --theme: [(${theme.config.basic_style.theme_color})];
+      [(${theme.config.enhance.cursor_style == 'breeze' ? '--cursor-default:url('+#theme.assets('/')+'/cursor/breeze/Arrow.cur),auto;--cursor-pointer:url('+#theme.assets('/')+'/cursor/breeze/Hand.cur),pointer;--cursor-text:url('+#theme.assets('/')+'/cursor/breeze/IBeam.cur),auto;--cursor-zoom-in:url('+#theme.assets('/')+'/cursor/breeze/Cross.cur),zoom-in;'
+      : theme.config.enhance.cursor_style == 'black_cat' ? '--cursor-default:url('+#theme.assets('/')+'/cursor/black_cat/normal.cur),auto;--cursor-pointer:url('+#theme.assets('/')+'/cursor/black_cat/ayuda.cur),pointer;--cursor-text:url('+#theme.assets('/')+'/cursor/black_cat/texto.cur),auto;--cursor-zoom-in:url('+#theme.assets('/')+'/cursor/black_cat/precision.cur),zoom-in;'
+      : theme.config.enhance.cursor_style == 'overwatch' ? '--cursor-default:url('+#theme.assets('/')+'/cursor/overwatch/pointer.cur),auto;--cursor-pointer:url('+#theme.assets('/')+'/cursor/overwatch/link.cur),pointer;--cursor-text:url('+#theme.assets('/')+'/cursor/overwatch/text.cur),auto;--cursor-zoom-in:url('+#theme.assets('/')+'/cursor/overwatch/cross.cur),zoom-in;'
+      : theme.config.enhance.cursor_style == 'rainbow_rain' ? '--cursor-default:url('+#theme.assets('/')+'/cursor/rainbow_rain/normal.cur),auto;--cursor-pointer:url('+#theme.assets('/')+'/cursor/rainbow_rain/link.cur),pointer;--cursor-text:url('+#theme.assets('/')+'/cursor/rainbow_rain/texto.cur),auto;--cursor-zoom-in:url('+#theme.assets('/')+'/cursor/rainbow_rain/precision.cur),zoom-in;'
+      : theme.config.enhance.cursor_style == 'marry' ? '--cursor-default:url('+#theme.assets('/')+'/cursor/marry/arrow.cur),auto;--cursor-pointer:url('+#theme.assets('/')+'/cursor/marry/arrow.cur),pointer;--cursor-text:url('+#theme.assets('/')+'/cursor/marry/beam.cur),auto;--cursor-zoom-in:url('+#theme.assets('/')+'/cursor/marry/move.cur),zoom-in;'
+      : theme.config.enhance.cursor_style != 'none' ? '--cursor-default: url('+#theme.assets('/')+'/cursor/' + theme.config.enhance.cursor_style + '/arrow.cur), auto;--cursor-pointer: url('+#theme.assets('/')+'/cursor/' + theme.config.enhance.cursor_style + '/hand.cur), pointer;--cursor-text: url('+#theme.assets('/')+'/cursor/' + theme.config.enhance.cursor_style + '/arrow.cur), auto;--cursor-zoom-in: url('+#theme.assets('/')+'/cursor/' + theme.config.enhance.cursor_style + '/arrow.cur), zoom-in;'
+      : ''})]
+    }
+
+    html.night {
+      --theme: [(${theme.config.basic_style.night_theme_color})];
+    }
+
+    body:before {
+      [(${(theme.config.basic_style.enable_image_bg && theme.config.basic_style.theme_style != 'clean' && !#strings.isEmpty(theme.config.basic_style.background_pc)) ? 'background: url("' + theme.config.basic_style.background_pc + '") center 0 no-repeat;' : ''})]
+    }
+
+    html.night body:before {
+      [(${(theme.config.basic_style.enable_image_bg && theme.config.basic_style.theme_style != 'clean' && !#strings.isEmpty(theme.config.basic_style.night_background_pc)) ? 'background: url("' + theme.config.basic_style.night_background_pc + '") center 0 no-repeat;' : ''})]
+    }
+
+    @media screen and (max-width: 768px) {
+      body:before {
+        [(${(theme.config.basic_style.enable_image_bg && theme.config.basic_style.theme_style != 'clean' && !#strings.isEmpty(theme.config.basic_style.background_mobile)) ? 'background: url("' + theme.config.basic_style.background_mobile + '") center 0 no-repeat;' : ''})]
+      }
+      html.night body:before {
+        [(${(theme.config.basic_style.enable_image_bg && theme.config.basic_style.theme_style != 'clean' && !#strings.isEmpty(theme.config.basic_style.night_background_mobile)) ? 'background: url("' + theme.config.basic_style.night_background_mobile + '") center 0 no-repeat;' : ''})]
+      }
+    }
+  </style>
+  <script th:inline="javascript">
+    window.logger = console.log;
+    [(${theme.config.enhance.enable_debug ? '' : '
+    console.logStorage = [];
+    console.log = function (message, ...optionalParams) {
+      console.logStorage.push(()=>window.logger(message, optionalParams));
+      if (console.logStorage.length > 100) {
+        console.logStorage.shift()
+      }
+    };
+    console.logPrint = function () {
+      for (let logItem of console.logStorage) {
+        logItem();
+      }
+    };'})]
+    [(${#strings.isEmpty(theme.config.basic_info.copy_explain) ? '' : '
+    document.addEventListener("copy", function (event) {
+      let clipboardData = event.clipboardData || window.clipboardData;
+      if (!clipboardData) { return; }
+      let text = window.getSelection().toString();
+      if (text) {
+        event.preventDefault();
+        clipboardData.setData("text/plain", text + "\\n' + #strings.escapeJavaScript(theme.config.basic_info.copy_explain) + '");
+      }
+    });'})]
+    /** 主题配置 */
+    const DreamConfig = {};
+    /** 站点名 */
+    DreamConfig["site_title"] = [[${site.title}]];
+    /** 灰色模式 */
+    DreamConfig["gray_mode"] = [[${theme.config.enhance.gray_mode_group.enable_gray_mode}]];
+    /** 配置自定义灰色模式时段 */
+    let gray_mode_time_list = []
+    let custom_gray_mode_time_list = [[${theme.config.enhance.gray_mode_group.gray_mode_time_list}]];
+    if(custom_gray_mode_time_list) {
+      for (let time of custom_gray_mode_time_list) {
+        let type = time.realNode.time_span;
+        let desc = time.realNode.time_span_desc;
+        gray_mode_time_list.push({time: type, desc: desc});
+      }
+    }
+    DreamConfig["header_fixed"] = [[${theme.config.basic_info.header_fixed}]];
+    DreamConfig["gray_mode_time_list"] = gray_mode_time_list;
+    DreamConfig["pjax_state"] = [[${theme.config.enhance.enable_pjax}]];
+    /** 配置分享方式 */
+    DreamConfig["post_share_sites"] = [[${theme.config.post.custom_post_share}]];
+    /** 配置灯笼特效文本 */
+    let effects_lantern_left = [[${theme.config.enhance.effects_lantern.effects_lantern_left}]];
+    let effects_lantern_right = [[${theme.config.enhance.effects_lantern.effects_lantern_right}]];
+    if(effects_lantern_left && effects_lantern_left.length > 1) {
+      effects_lantern_left = effects_lantern_left.charAt(0);
+    } else {
+      effects_lantern_left = '';
+    }
+    if(effects_lantern_left && effects_lantern_right.length > 1) {
+      effects_lantern_right = effects_lantern_right.charAt(0);
+    } else {
+      effects_lantern_right = '';
+    }
+    DreamConfig["effects_lantern_left"] = effects_lantern_left;
+    DreamConfig["effects_lantern_right"] = effects_lantern_right;
+
+    /** 控制台主题信息 */
+    DreamConfig["enable_console_version_info"] = [[${theme.config.enhance.enable_console_version_info}]];
+    /** 安全链接配置 */
+    DreamConfig["enable_security_link"] = [[${theme.config.security_link_config.enable_security_link}]];
+    DreamConfig['security_link_url'] = [[${!#strings.isEmpty(theme.config.security_link_config.security_link_single_page) ? singlePageFinder.getByName(theme.config.security_link_config.security_link_single_page)?.status?.permalink : ''}]]
+    let whitelistStr = [[${theme.config.security_link_config.whitelist_domains}]]
+    let hostname = window.location.hostname
+    if (whitelistStr) {
+      DreamConfig['security_link_whitelist'] = whitelistStr.split('\n').map(domain => domain.toLowerCase().trim()).filter(domain => domain.length > 0)
+      if (DreamConfig['security_link_whitelist'].indexOf(hostname) === -1) {
+        DreamConfig['security_link_whitelist'].push(hostname)
+      }
+    } else {
+      DreamConfig['security_link_whitelist'] = [hostname]
+    }
+    /** 配置主题模式 */
+    DreamConfig["default_theme"] = [[${theme.config.basic_style.default_theme}]];
+    DreamConfig["theme_version"] = [[${theme.spec.version}]];
+    DreamConfig["site_comment"] = [[${site.comment.enable}]];
+    DreamConfig["theme_base"] = "[(${#theme.assets('/')})]";
+    [(${!#strings.isEmpty(theme.config.post.code_fold_line)?'DreamConfig["code_fold_line"] = "' + theme.config.post.code_fold_line + '";': ''})]
+      [(${!#strings.isEmpty(theme.config.basic_info.document_hidden_title)?'DreamConfig["document_hidden_title"] = "' + #strings.escapeJavaScript(theme.config.basic_info.document_hidden_title) + '";': ''})]
+      [(${!#strings.isEmpty(theme.config.basic_info.document_visible_title)?'DreamConfig["document_visible_title"] = "' + #strings.escapeJavaScript(theme.config.basic_info.document_visible_title) + '";' : ''})]
+      [(${!#strings.isEmpty(theme.config.basic_info.website_time)?'DreamConfig["website_time"] = "' + theme.config.basic_info.website_time + '";' : ''})]
+      [(${(theme.config.sidebar.enable_color_character && !#strings.isEmpty(theme.config.sidebar.color_character))? 'DreamConfig["spark_input_content"] = ["' + #strings.escapeJavaScript(theme.config.sidebar.color_character).replace('\\n', '","') + '"]' : ''})]
+      DreamConfig["notice_show_mode"] = '[(${theme.config.sidebar.notice_show_mode})]';
+      [(${(!#strings.isEmpty(theme.config.post.img_fold_height) && #numbers.sequence(theme.config.post.img_fold_height,theme.config.post.img_fold_height)[0] >= 400)?'DreamConfig["img_fold_height"] = ' + theme.config.post.img_fold_height + ';': ''})]
+      [(${(!#strings.isEmpty(theme.config.page_config.journals_fold_height) && #numbers.sequence(theme.config.page_config.journals_fold_height,theme.config.page_config.journals_fold_height)[0] >= 260)?'DreamConfig["journals_fold_height"] = ' + theme.config.page_config.journals_fold_height + ';': ''})]
+      [(${theme.config.enhance.cursor_move != 'none'?'DreamConfig["cursor_move"] = "' + theme.config.enhance.cursor_move + '";': ''})]
+      [(${theme.config.enhance.cursor_click != 'none'?'DreamConfig["cursor_click"] = "' + theme.config.enhance.cursor_click + '";': ''})]
+      [(${theme.config.enhance.effects_lantern_mode != 'none'?'DreamConfig["effects_lantern_mode"] = "' + theme.config.enhance.effects_lantern_mode + '";': ''})]
+      [(${theme.config.enhance.effects_sakura_mode != 'none'?'DreamConfig["effects_sakura_mode"] = "' + theme.config.enhance.effects_sakura_mode + '";': ''})]
+      [(${theme.config.enhance.effects_snowflake_mode != 'none'?'DreamConfig["effects_snowflake_mode"] = "' + theme.config.enhance.effects_snowflake_mode + '";': ''})]
+      [(${theme.config.enhance.effects_universe_mode != 'none'?'DreamConfig["effects_universe_mode"] = "' + theme.config.enhance.effects_universe_mode + '";': ''})]
+      [(${theme.config.enhance.effects_circle_magic_mode != 'none'?'DreamConfig["effects_circle_magic_mode"] = "' + theme.config.enhance.effects_circle_magic_mode + '";': ''})]
+      [(${theme.config.enhance.effects_quantum_silk_thread_mode != 'none'?'DreamConfig["effects_quantum_silk_thread_mode"] = "' + theme.config.enhance.effects_quantum_silk_thread_mode + '";': ''})]
+      [(${theme.config.post.show_img_name?'DreamConfig["show_img_name"] = true;': ''})]
+      [(${theme.config.basic_style.load_progress != 'none'?'DreamConfig["load_progress"] = "' + theme.config.basic_style.load_progress + '";': ''})]
+      [(${!#strings.isEmpty(theme.config.page_config.journals_share_image)?'DreamConfig["journals_share_image"] = "' + theme.config.page_config.journals_share_image + '";': ''})]
+      [(${!#strings.isEmpty(theme.config.sidebar.meting_api)?'var meting_api = "' + theme.config.sidebar.meting_api + '";': ''})]
+  </script>
+</th:block>

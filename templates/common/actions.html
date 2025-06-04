@@ -1,0 +1,14 @@
+<div class="actions" xmlns:th="https://www.thymeleaf.org">
+    <div class="bullet-screen is-hidden-mobile is-hidden-all">
+        <span>弹</span>
+    </div>
+    <div id="toggle-mode">
+        <i class="ri-contrast-fill"></i>
+    </div>
+    <div th:if="${theme.config.basic_style.drawer_toc}" class="action-toc is-hidden-desktop">
+        <i class="ri-list-unordered"></i>
+    </div>
+    <div id="back-to-top">
+        <i class="ri-arrow-up-line"></i>
+    </div>
+</div>

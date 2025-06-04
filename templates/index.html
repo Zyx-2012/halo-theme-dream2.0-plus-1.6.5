@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<th:block xmlns:th="https://www.thymeleaf.org"
+          th:insert="~{common/layout :: layout (title = ${site.title}, canonical = ${site.url}, content = ~{::content}, isPost = false)}"
+          th:with="isFirstIndex = ${posts.first}">
+  <th:block th:fragment="content" th:with="isEmpty = ${#lists.isEmpty(posts)}">
+    <div th:if="${isEmpty}" class="card card-empty">
+      <i class="ri-inbox-2-fill"></i>
+      还没有发表过文章
+    </div>
+    <th:block th:unless="${isEmpty}">
+      <th:block th:replace="~{::firstIndex}"/>
+      <th:block th:replace="~{main/article_list :: articleList (${posts.items})}"/>
+      <th:block th:replace="~{main/pagination :: pagination (${posts}, '/index')}"/>
+    </th:block>
+  </th:block>
+
+  <th:block th:if="${posts.first}" th:fragment="firstIndex">
+    <th:block>
+      <th:block th:replace="~{::carousel}"/>
+    </th:block>
+    <div th:if="${!#strings.isEmpty(theme.config.basic_info.index_inform)}" class="card tips brightness"
+         th:utext="${theme.config.basic_info.index_inform}"></div>
+  </th:block>
+
+  <th:block th:fragment="carousel">
+    <div th:if="${!#lists.isEmpty(theme.config.basic_style.carousel_options)}" class="card widget swiper">
+      <div class="swiper-wrapper">
+        <a th:each="option :${theme.config.basic_style.carousel_options}" class="swiper-slide bg-shadow cover-image"
+           th:style="'background-image: url(' + ${option.image} + ')'" th:target="${option.target}"
+           th:href="${option.url}" th:aria-label="${option.title}" th:title="${option.title}">
+          <div class="swiper-slide-details" data-swiper-parallax="200" data-swiper-parallax-duration="600">
+            <p class="swiper-slide-details-title" th:text="${option.title}"></p>
+          </div>
+        </a>
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </th:block>
+</th:block>

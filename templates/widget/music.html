@@ -1,0 +1,16 @@
+<div xmlns:th="https://www.thymeleaf.org"
+     th:fragment="widget (sidebar)"
+     th:class="'card widget music ' + ${sidebar.hide}">
+  <div class="card-title">
+    <i th:class="${#strings.defaultString(sidebar.icon, 'ri-music-2-line') + ' card-title-label'}"></i><span th:text="${#strings.defaultString(sidebar.title, '音乐')}"></span>
+  </div>
+  <div style="min-height: 90px;margin-top: -0.5rem;">
+    <meting-js th:if="${theme.config.sidebar.music_mode == 'playlist'}" list-folded="true" server="netease"
+               type="playlist" th:id="${theme.config.sidebar.netease_playlist_id}"></meting-js>
+    <th:block th:if="${theme.config.sidebar.music_mode == 'config'}"
+              th:utext="'<meting-js ' + ${theme.config.sidebar.music_config} + '></meting-js>'"></th:block>
+  </div>
+  <link rel="stylesheet" th:href="@{/assets/lib/aplayer@1.10.1/APlayer.min.css}">
+  <script defer th:src="@{/assets/lib/aplayer@1.10.1/APlayer.min.js}"></script>
+  <script defer th:src="@{/assets/lib/meting@2.0.1/Meting.min.js}"></script>
+</div>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<th:block xmlns:th="https://www.thymeleaf.org">
+    <th:block
+            th:if="${error.status >= 400 && error.status < 500}"
+            th:insert="~{${theme.config.enhance.error.style_4xx} :: error_fragment}">
+    </th:block>
+    <th:block
+            th:if="${error.status >= 500 && error.status < 600}"
+            th:insert="~{${theme.config.enhance.error.style_5xx} :: error_fragment}">
+    </th:block>
+</th:block>
+

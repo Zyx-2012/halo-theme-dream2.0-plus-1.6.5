@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<th:block xmlns:th="https://www.thymeleaf.org"
+          th:insert="~{common/layout :: layout (title = ${#strings.defaultString(linksTitle, '友链')} + ' - ' + ${site.title}, canonical = @{/links}, content = ~{::content}, isPost = false)}"
+          th:with="baseEnableComment = ${theme.config.page_config.link_enable_comment == true || (!#strings.isEmpty(theme.config.page_config.link_comment_id) && theme.config.page_config.link_enable_comment == 'custom')}">
+    <th:block th:fragment="content"
+              th:with="defaultAvatar = ${#strings.defaultString(theme.config.page_config.links_default_avatar, #theme.assets('/img/avatar.svg'))}">
+        <script>
+          function setSafeSrc(element, url) {
+            // 允许：http/https/data:image 协议 或 相对路径（以/开头）
+            var isSafe = /^(https?|data:image\/[a-z]+;base64|\/)/i.test(url);
+            element.src = isSafe ? encodeURI(url) : ''; // 不安全则清空
+          }
+        </script>
+        <div class="card">
+            <div th:if="${!#strings.isEmpty(theme.config.page_config.links_thumbnail)}" class="card-image cover-image" th:style="'background-image: url(' + ${theme.config.page_config.links_thumbnail} + ')'">
+            </div>
+            <div class="card-content main">
+                <h1 class="title" th:text="${#strings.defaultString(linksTitle, '友链')} + ' - ' + ${contributor.displayName} + '的小伙伴们'"></h1>
+                <div class="main-content">
+                    <th:block th:each="group : ${groups}" th:if="${#annotations.getOrDefault(group, 'hide','false') == 'false'}">
+                        <div th:if="${!#lists.isEmpty(group.links)}" class="links">
+                            <h3 class="link-title" th:text="${#strings.defaultString(group.spec.displayName, '小伙伴们')}" th:id="'toc' + ${groupStat.index}"></h3>
+                            <ul class="link-items">
+                                <li th:each="link : ${group.links}" th:if="${#annotations.getOrDefault(link, 'hide','false') == 'false'}">
+                                    <a class="links-item" th:href="${link.spec.url}" rel="noopener noreferrer" target="_blank" th:aria-label="${link.spec.description}"
+                                       th:title="${link.spec.description}">
+                                        <img th:if="${#strings.isEmpty(link.spec.logo)}" class="not-gallery" th:title="${link.spec.displayName}" th:src="${defaultAvatar}" th:alt="${link.spec.displayName}">
+                                        <img th:unless="${#strings.isEmpty(link.spec.logo)}" class="not-gallery" th:title="${link.spec.displayName}" th:src="${defaultAvatar}"
+                                             th:data-url="${link.spec.logo}"
+                                             th:data-default="${defaultAvatar}"
+                                             onload="if(!this.finish){this.finish=true;setSafeSrc(this, this.getAttribute('data-url'))}"
+                                             onerror="this.onerror='';if (this.finish) {setSafeSrc(this, this.getAttribute('data-default'))} else {this.finish=true;setSafeSrc(this, this.getAttribute('data-url'))}"
+                                             th:alt="${link.spec.displayName}">
+                                        <span class="link-name" th:text="${link.spec.displayName}"></span>
+                                        <div class="link-desc" th:text="${#strings.defaultString(link.spec.description, '他还没有自我介绍呢')}"></div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th:block>
+                    <hr th:if="${theme.config.page_config.show_exchange_info || !#strings.isEmpty(theme.config.page_config.links_info)}"/>
+                    <th:block th:if="${theme.config.page_config.show_exchange_info}"
+                              th:with="bloggerAvatar= ${#strings.defaultString(theme.config.page_config.links_blogger_avatar, contributor.avatar)},
+                                       descriptive= ${#strings.defaultString(theme.config.page_config.links_descriptive, contributor.bio)}">
+                        <p style="margin-bottom: 4px">申请友链的方法：</p>
+                        <ul>
+                            <li>名称：[[${site.title}]]</li>
+                            <li>地址：<a th:href="${site.url}" target="_blank" th:text="${site.url}" th:aria-label="${site.url}" th:title="${site.url}"></a></li>
+                            <li>图标：<a th:href="${bloggerAvatar}" target="_blank" th:text="${bloggerAvatar}" th:aria-label="${bloggerAvatar}" th:title="${bloggerAvatar}"></a></li>
+                            <li>描述：[[${descriptive}]]</li>
+                            <li th:if="${!#strings.isEmpty(theme.config.page_config.links_rss_address)}">订阅：<a th:href="${theme.config.page_config.links_rss_address}" th:aria-label="${theme.config.page_config.links_rss_address}" th:title="${theme.config.page_config.links_rss_address}" target="_blank" th:text="${theme.config.page_config.links_rss_address}"></a></li>
+                        </ul>
+                    </th:block>
+                    <div th:if="${!#strings.isEmpty(theme.config.page_config.links_info)}" th:utext="${theme.config.page_config.links_info}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card card-content comment-wrapper-z-index" id="comment-wrapper" th:if="${enableComment}">
+            <h3 class="comment-title">评论</h3>
+            <th:block th:if="${theme.config.page_config.link_enable_comment == 'custom'}">
+                <halo:comment
+                        group="content.halo.run"
+                        kind="SinglePage"
+                        th:attr="name=${theme.config.page_config.link_comment_id}"
+                />
+            </th:block>
+            <th:block th:if="${theme.config.page_config.link_enable_comment != 'custom'}">
+                <halo:comment
+                        group="plugin.halo.run"
+                        kind="Plugin"
+                        th:attr="name=${pluginName}"
+                />
+            </th:block>
+        </div>
+    </th:block>
+</th:block>

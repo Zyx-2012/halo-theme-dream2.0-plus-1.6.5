@@ -1,0 +1,68 @@
+<div class="popup-notice hidden" xmlns:th="https://www.thymeleaf.org">
+    <div class="notice-content">
+        <div class="content-title" th:if="${!#strings.isEmpty(theme.config.pop_notice.pop_notice_title)}">
+            <span>[[${theme.config.pop_notice.pop_notice_title}]]</span>
+        </div>
+        <div class="others-tip">[(${theme.config.pop_notice.pop_notice_content})]</div>
+        <div th:class="|countdown ${#strings.isEmpty(theme.config.pop_notice.pop_notice_btn) ? 'padding' : ''}|">
+            <i class="ri-flashlight-fill"></i>本通知将在 <span id="countdown">[[${theme.config.pop_notice.pop_notice_show_time}]]</span> 秒后自动消失
+        </div>
+        <div class="others-end" th:if="${!#strings.isEmpty(theme.config.pop_notice.pop_notice_btn)}">
+            <button class="notice-close-btn" onclick="closePopupNotice();">[[${theme.config.pop_notice.pop_notice_btn}]]</button>
+        </div>
+    </div>
+
+    <link rel="preload stylesheet" as="style" th:href="@{/assets/css/notice/stagnant.min.css(mew=${theme.spec.version})}">
+    <script th:inline="javascript">
+      const notice_read_key = 'notice_read_key'
+      let notice_stagnant_content = 'stagnant-' + Utils.djb2Hash(`[[${#strings.defaultString(theme.config.pop_notice.pop_notice_content, '')}]]`)
+
+      function shouldShowNotice() {
+        return `${notice_stagnant_content}` !== localStorage.getItem(notice_read_key) && `${notice_stagnant_content}` !== sessionStorage.getItem(notice_read_key)
+      }
+
+      window.closePopupNotice = function () {
+        // 隐藏弹窗
+        document.querySelector('.popup-notice').remove()
+        document.body.classList.remove('body-no-scroll')
+
+        if ([[${theme.config.pop_notice.pop_notice_show_mode != 'session'}]]) {
+          localStorage.setItem(notice_read_key, `${notice_stagnant_content}`)
+        } else {
+          sessionStorage.setItem(notice_read_key, `${notice_stagnant_content}`)
+        }
+
+        if (interval) {
+          clearInterval(interval)
+        }
+      }
+      let interval
+      // 页面加载时检查并显示通知
+      document.addEventListener('DOMContentLoaded', function () {
+        if (shouldShowNotice()) {
+          document.body.classList.add('body-no-scroll')
+          //显示
+          document.querySelector('.popup-notice').classList.remove('hidden')
+          //单次显示时，直接记录
+          if ([[${theme.config.pop_notice.pop_notice_show_mode == 'first'}]]) {
+            localStorage.setItem(notice_read_key, `${notice_stagnant_content}`)
+          }
+
+          let countdown = [[${theme.config.pop_notice.pop_notice_show_time}]]
+          if (countdown && countdown > 0) {
+            interval = setInterval(function () {
+              countdown--
+              document.querySelector('.popup-notice #countdown').innerText = countdown
+              if (countdown === 0) {
+                closePopupNotice()
+              }
+            }, 1000)
+          } else {
+            document.querySelector('.popup-notice .countdown').remove()
+          }
+        } else {
+          closePopupNotice()
+        }
+      })
+    </script>
+</div>
