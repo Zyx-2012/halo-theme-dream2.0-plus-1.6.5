@@ -1,0 +1,187 @@
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  generateName: annotation-setting-
+spec:
+  targetRef:
+    group: content.halo.run
+    kind: Post
+  formSchema:
+    - $formkit: radio
+      name: enable_copyright
+      label:  开启文章版权声明
+      value: ""
+      help: '当前配置将覆盖主题中的默认配置。'
+      options:
+        - value: "true"
+          label:  开启
+        - value: "false"
+          label:  关闭
+        - value: ""
+          label:  跟随默认配置
+    - $formkit: select
+      name: thumbnail_mode
+      label: 文章列表缩略图模式
+      value: "none"
+      help: '文章在列表的缩略图模式，除网格布局外，当前配置将覆盖主题中的默认配置。'
+      options:
+        - value: "default"
+          label:  默认模式
+        - value: "back"
+          label:  背景图模式
+        - value: "small"
+          label:  小图模式（左侧）
+        - value: "small-right"
+          label:  小图模式（右侧）
+        - value: "small-alter"
+          label:  小图模式（交替）
+        - value: "fold"
+          label:  折叠模式
+        - value: "none"
+          label:  跟随默认配置
+    - $formkit: text
+      name: tips
+      label:  文章提示
+      value: ""
+      placeholder: '请输入提示内容'
+      help: '在文章顶部显示一条提示。'
+    - $formkit: radio
+      name: enable_share
+      label:  开启文章分享
+      value: ""
+      help: '当前配置将覆盖主题中的默认配置。'
+      options:
+        - value: "true"
+          label:  开启
+        - value: "false"
+          label:  关闭
+        - value: ""
+          label:  跟随默认配置
+    - $formkit: radio
+      name: enable_donate
+      label:  开启文章打赏
+      value: ""
+      help: '当前配置将覆盖主题中的默认配置。'
+      options:
+        - value: "true"
+          label:  开启
+        - value: "false"
+          label:  关闭
+        - value: ""
+          label:  跟随默认配置
+
+---
+
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  generateName: annotation-setting-
+spec:
+  targetRef:
+    group: content.halo.run
+    kind: SinglePage
+  formSchema:
+    - $formkit: radio
+      name: enable_copyright
+      label:  开启文章版权声明
+      value: ""
+      help: '当前配置将覆盖主题中的默认配置。'
+      options:
+        - value: "true"
+          label:  开启
+        - value: "false"
+          label:  关闭
+        - value: ""
+          label:  跟随默认配置
+    - $formkit: text
+      name: tips
+      label:  文章提示
+      value: ""
+      placeholder: '请输入提示内容'
+      help: '在文章顶部显示一条提示。'
+    - $formkit: radio
+      name: enable_share
+      label:  开启文章分享
+      value: ""
+      help: '当前配置将覆盖主题中的默认配置。'
+      options:
+        - value: "true"
+          label:  开启
+        - value: "false"
+          label:  关闭
+        - value: ""
+          label:  跟随默认配置
+    - $formkit: radio
+      name: enable_donate
+      label:  开启文章打赏
+      value: ""
+      help: '当前配置将覆盖主题中的默认配置。'
+      options:
+        - value: "true"
+          label:  开启
+        - value: "false"
+          label:  关闭
+        - value: ""
+          label:  跟随默认配置
+
+---
+
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  generateName: annotation-setting-
+spec:
+  targetRef:
+    group: ""
+    kind: MenuItem
+  formSchema:
+    - $formkit: "text"
+      name: "icon"
+      label: "图标"
+      placeholder: '请输入图标 class 内容'
+    - $formkit: "text"
+      name: "desc"
+      label: "描述"
+      placeholder: '请输入鼠标悬停时描述内容，默认为菜单名'
+
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  generateName: annotation-setting-
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: LinkGroup
+  formSchema:
+    - $formkit: radio
+      name: "hide"
+      label: "是否隐藏"
+      value: "false"
+      help: '控制是否在"/links"页面中隐藏此分组。'
+      options:
+        - value: "true"
+          label: 是
+        - value: "false"
+          label: 否
+
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  generateName: annotation-setting-
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: Link
+  formSchema:
+    - $formkit: radio
+      name: "hide"
+      label: "是否隐藏"
+      value: "false"
+      help: '控制是否在"/links"页面中隐藏此链接。'
+      options:
+        - value: "true"
+          label: 是
+        - value: "false"
+          label: 否

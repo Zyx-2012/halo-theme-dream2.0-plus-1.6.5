@@ -1,0 +1,36 @@
+@default: var(--cursor-default);
+@pointer: var(--cursor-pointer);
+@text: var(--cursor-text);
+@zoom-in: var(--cursor-zoom-in);
+
+body {
+  cursor: @default;
+}
+
+a, button, .expand-done, .navbar-above .navbar-nav .item, .navbar-slideicon, .navbar-searchicon, .widget .ad-tag .click-close, .actions > div, .main-content figure > figcaption div, .photos .picture-details {
+  cursor: @pointer;
+}
+
+.aplayer .aplayer-pic, .aplayer .aplayer-music, .aplayer .aplayer-bar-wrap, .aplayer .aplayer-icon {
+  cursor: @pointer !important;
+}
+
+.main-content :not(.jg-entry) > img:not([class]) {
+  cursor: @zoom-in;
+}
+
+p, input[type=text], blockquote, th, td, code, h1, h2, h3, h4, h5, h6, hr, li, textarea {
+  cursor: @text;
+}
+
+.wechat .flip-wrapper {
+  cursor: @default;
+}
+
+.wechat .flip-wrapper.pointer {
+  cursor: @pointer;
+}
+
+label {
+  cursor: @default;
+}

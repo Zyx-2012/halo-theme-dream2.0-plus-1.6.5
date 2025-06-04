@@ -1,0 +1,44 @@
+apiVersion: theme.halo.run/v1alpha1
+kind: Theme
+
+metadata:
+  # 主题id，唯一
+  name: theme-dream2-plus
+spec:
+  # 主题名称
+  displayName: Dream2.0 Plus
+  author:
+    # 作者名称
+    name: 宏尘极客
+    # 作者网址
+    website: https://www.hcjike.com
+  customTemplates:
+    page:
+      - name: 关于页面模版
+        description: 支持关于页面配置
+        screenshot:
+        file: about.html
+      - name: 安全链接页面模版
+        description: 支持安全链接页面配置
+        screenshot:
+        file: security_link.html
+  # 主题描述
+  description: '梦之城，童话梦境'
+  # 主题logo地址
+  logo: /themes/theme-dream2-plus/assets/img/logo.png
+  # 主题地址
+  website: https://www.hcjike.com/docs/halo-theme-dream2.0
+  # 主题github开源地址
+  repo: https://github.com/zsjy/halo-theme-dream2.0-plus.git
+  # 提交问题地址
+  issues: https://github.com/zsjy/halo-theme-dream2.0-plus/issues
+  settingName: theme-dream2-plus-setting
+  configMapName: theme-dream2-plus-configMap
+  # 版本号
+  version: 1.6.5
+  # 最低支持的 Halo 版本
+  requires: ">=2.20.19"
+  # 许可
+  license:
+    - name: "MIT"
+      url: "https://github.com/zsjy/halo-theme-dream2.0-plus?tab=MIT-1-ov-file"
